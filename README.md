@@ -1,24 +1,124 @@
-# README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# ✦ Блог на Ruby on Rails
 
-Things you may want to cover:
+Простий блог із повним CRUD-функціоналом: створення, перегляд, редагування та видалення постів.
 
-* Ruby version
+## Технології
 
-* System dependencies
+- **Ruby** 3.2+
+- **Rails** 7.1
+- **SQLite3** (база даних)
+- **Turbo Rails** (швидка навігація без перезавантаження)
 
-* Configuration
+---
 
-* Database creation
+## Швидкий старт
 
-* Database initialization
+### 1. Встановіть залежності
 
-* How to run the test suite
+```bash
+bundle install
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+### 2. Створіть базу даних
 
-* Deployment instructions
+```bash
+rails db:create
+rails db:migrate
+```
 
-* ...
+### 3. (Опціонально) Додайте тестові дані
+
+```bash
+rails db:seed
+```
+
+### 4. Запустіть сервер
+
+```bash
+rails server
+```
+
+Відкрийте [http://localhost:3000](http://localhost:3000)
+
+---
+
+## Функціонал
+
+| Дія | URL | Метод |
+|-----|-----|-------|
+| Список постів | `/posts` | GET |
+| Читати пост | `/posts/:id` | GET |
+| Форма нового поста | `/posts/new` | GET |
+| Створити пост | `/posts` | POST |
+| Форма редагування | `/posts/:id/edit` | GET |
+| Оновити пост | `/posts/:id` | PATCH |
+| Видалити пост | `/posts/:id` | DELETE |
+
+---
+
+## Структура проекту
+
+```
+blog/
+├── app/
+│   ├── controllers/
+│   │   └── posts_controller.rb   # CRUD логіка
+│   ├── models/
+│   │   └── post.rb               # Валідації
+│   ├── views/
+│   │   ├── layouts/
+│   │   │   └── application.html.erb
+│   │   └── posts/
+│   │       ├── index.html.erb    # Список постів
+│   │       ├── show.html.erb     # Один пост
+│   │       ├── new.html.erb      # Форма створення
+│   │       ├── edit.html.erb     # Форма редагування
+│   │       └── _form.html.erb    # Спільна форма
+│   └── assets/stylesheets/
+│       └── application.css       # Стилі
+├── config/
+│   └── routes.rb                 # Маршрути
+├── db/
+│   ├── migrate/                  # Міграції
+│   ├── schema.rb
+│   └── seeds.rb                  # Тестові дані
+└── Gemfile
+```
+
+---
+
+## Деплой на GitHub
+
+### Перший раз
+
+```bash
+# Ініціалізувати git репозиторій
+git init
+
+# Додати всі файли
+git add .
+
+# Перший коміт
+git commit -m "Initial commit: Rails blog with CRUD"
+
+# Підключити GitHub репозиторій (замінити YOUR_USERNAME та REPO_NAME)
+git remote add origin https://github.com/YOUR_USERNAME/REPO_NAME.git
+
+# Завантажити на GitHub
+git push -u origin main
+```
+
+### Подальші зміни
+
+```bash
+git add .
+git commit -m "Опис змін"
+git push
+```
+
+---
+
+## Ліцензія
+
+MIT
