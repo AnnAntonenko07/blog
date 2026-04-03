@@ -1,0 +1,28 @@
+<article class="post-full">
+  <header class="post-full__header">
+    <%= link_to "← Назад", posts_path, class: "back-link" %>
+    <div class="post-full__meta">
+      <span>— <%= @post.author %></span>
+      <span><%= @post.created_at.strftime("%-d %B %Y") %></span>
+      <span><%= @post.reading_time %></span>
+    </div>
+    <h1 class="post-full__title"><%= @post.title %></h1>
+    <div class="post-full__divider">✦</div>
+  </header>
+
+  <div class="post-full__body">
+    <%= simple_format(@post.body) %>
+  </div>
+
+  <footer class="post-full__footer">
+    <div class="post-actions">
+      <%= link_to "Редагувати", edit_post_path(@post), class: "btn btn--primary" %>
+      <%= button_to "Видалити", @post, method: :delete,
+          data: { turbo_confirm: "Видалити цей пост назавжди?" },
+          class: "btn btn--danger" %>
+    </div>
+    <% if @post.updated_at != @post.created_at %>
+      <p class="post-full__updated">Оновлено: <%= @post.updated_at.strftime("%-d %b %Y, %H:%M") %></p>
+    <% end %>
+  </footer>
+</article>

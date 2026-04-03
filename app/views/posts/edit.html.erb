@@ -1,0 +1,9 @@
+<div class="form-page">
+  <div class="form-page__header">
+    <%= link_to "← До поста", @post, class: "back-link" %>
+    <h1 class="form-page__title">Редагування</h1>
+    <p class="form-page__subtitle"><em>"<%= truncate(@post.title, length: 60) %>"</em></p>
+  </div>
+
+  <%= render "form", post: @post %>
+</div>

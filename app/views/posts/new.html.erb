@@ -1,0 +1,9 @@
+<div class="form-page">
+  <div class="form-page__header">
+    <%= link_to "← Назад", posts_path, class: "back-link" %>
+    <h1 class="form-page__title">Новий пост</h1>
+    <p class="form-page__subtitle">Поділіться своїми думками зі світом</p>
+  </div>
+
+  <%= render "form", post: @post %>
+</div>

@@ -1,0 +1,38 @@
+<div class="page-hero">
+  <p class="hero-label">Журнал думок</p>
+  <h1 class="hero-title">Останні<br><em>публікації</em></h1>
+  <div class="hero-line"></div>
+</div>
+
+<% if @posts.empty? %>
+  <div class="empty-state">
+    <span class="empty-icon">📄</span>
+    <p>Постів ще немає.</p>
+    <%= link_to "Написати перший", new_post_path, class: "btn btn--primary" %>
+  </div>
+<% else %>
+  <div class="posts-grid">
+    <% @posts.each_with_index do |post, i| %>
+      <article class="post-card <%= i == 0 ? 'post-card--featured' : '' %>">
+        <div class="post-card__meta">
+          <span class="post-card__author">— <%= post.author %></span>
+          <span class="post-card__date"><%= post.created_at.strftime("%-d %b %Y") %></span>
+          <span class="post-card__reading"><%= post.reading_time %></span>
+        </div>
+        <h2 class="post-card__title">
+          <%= link_to post.title, post %>
+        </h2>
+        <p class="post-card__excerpt">
+          <%= truncate(post.body, length: 160) %>
+        </p>
+        <div class="post-card__actions">
+          <%= link_to "Читати →", post, class: "btn btn--ghost" %>
+          <%= link_to "Редагувати", edit_post_path(post), class: "btn btn--ghost btn--small" %>
+          <%= button_to "Видалити", post, method: :delete,
+              data: { turbo_confirm: "Видалити цей пост?" },
+              class: "btn btn--danger btn--small" %>
+        </div>
+      </article>
+    <% end %>
+  </div>
+<% end %>
