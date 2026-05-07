@@ -1,9 +1,262 @@
-<div class="form-page">
-  <div class="form-page__header">
-    <%= link_to "← До поста", @post, class: "back-link" %>
-    <h1 class="form-page__title">Редагування</h1>
-    <p class="form-page__subtitle"><em>"<%= truncate(@post.title, length: 60) %>"</em></p>
-  </div>
+<style>
+  :root {
+    --page-bg: #f0f2f5;
+    --card-bg: #ffffff;
+    --heading: #111827;
+    --muted: #6b7280;
+    --text: #1f2937;
+    --label: #374151;
+    --border: #e8e8e8;
+    --outline: #d1d5db;
+    --accent: #1d9e75;
+    --accent-dark: #147d5d;
+    --danger: #d85a30;
+    --danger-soft: #fff7ed;
+    --shadow: 0 14px 40px rgba(17, 24, 39, 0.08);
+  }
 
-  <%= render "form", post: @post %>
-</div>
+  body {
+    margin: 0;
+    background: var(--page-bg);
+    color: var(--text);
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .form-page {
+    width: min(760px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 40px 0 56px;
+  }
+
+  .page-label {
+    margin: 0 0 8px;
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  .page-title {
+    margin: 0 0 24px;
+    color: var(--heading);
+    font-size: clamp(30px, 6vw, 42px);
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .form-card {
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--card-bg);
+    box-shadow: var(--shadow);
+  }
+
+  .form-errors {
+    margin-bottom: 20px;
+    padding: 14px 16px;
+    border: 1px solid rgba(216, 90, 48, 0.35);
+    border-radius: 12px;
+    background: var(--danger-soft);
+    color: var(--danger);
+  }
+
+  .form-errors p {
+    margin: 0 0 8px;
+    font-weight: 700;
+  }
+
+  .form-errors ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 18px;
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--label);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .form-input {
+    box-sizing: border-box;
+    width: 100%;
+    border: 1px solid var(--outline);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--heading);
+    background: #ffffff;
+    font: inherit;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .form-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(29, 158, 117, 0.14);
+  }
+
+  .form-input--error {
+    border-color: var(--danger);
+  }
+
+  .form-textarea {
+    min-height: 220px;
+    resize: vertical;
+    line-height: 1.65;
+  }
+
+  .form-actions,
+  .danger-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .form-actions {
+    margin-top: 24px;
+  }
+
+  .danger-actions {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 18px;
+    border: 1px solid var(--outline);
+    border-radius: 8px;
+    background: #ffffff;
+    color: var(--heading);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    transition: background 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .btn--primary {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: #ffffff;
+  }
+
+  .btn--primary:hover {
+    border-color: var(--accent-dark);
+    background: var(--accent-dark);
+  }
+
+  .btn--danger {
+    border-color: var(--danger);
+    background: #ffffff;
+    color: var(--danger);
+  }
+
+  .btn--danger:hover {
+    background: var(--danger-soft);
+  }
+
+  .cancel-link {
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .cancel-link:hover {
+    color: var(--accent);
+  }
+
+  @media (max-width: 640px) {
+    .form-page {
+      width: min(100% - 24px, 760px);
+      padding: 24px 0 40px;
+    }
+
+    .form-actions,
+    .form-actions .btn,
+    .danger-actions,
+    .danger-actions .btn {
+      width: 100%;
+    }
+
+    .cancel-link {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>
+
+<main class="form-page">
+  <header>
+    <p class="page-label">Blog</p>
+    <h1 class="page-title">Edit post</h1>
+  </header>
+
+  <section class="form-card">
+    <%= form_with model: @post do |f| %>
+      <% if @post.errors.any? %>
+        <div class="form-errors">
+          <p><%= pluralize(@post.errors.count, "error") %> prevented this post from being saved:</p>
+          <ul>
+            <% @post.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="form-group">
+        <%= f.label :title, "Title", class: "form-label" %>
+        <%= f.text_field :title,
+                         class: @post.errors[:title].any? ? "form-input form-input--error" : "form-input",
+                         placeholder: "Post title" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :author, "Author", class: "form-label" %>
+        <%= f.text_field :author,
+                         class: @post.errors[:author].any? ? "form-input form-input--error" : "form-input",
+                         placeholder: "Author name" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :body, "Body", class: "form-label" %>
+        <%= f.text_area :body,
+                        class: @post.errors[:body].any? ? "form-input form-textarea form-input--error" : "form-input form-textarea",
+                        rows: 12,
+                        placeholder: "Write your post..." %>
+      </div>
+
+      <div class="form-actions">
+        <%= f.submit "Update Post", class: "btn btn--primary" %>
+        <%= link_to "Cancel", post_path(@post), class: "cancel-link" %>
+      </div>
+    <% end %>
+
+    <div class="danger-actions">
+      <%= link_to "Delete Post",
+                  post_path(@post),
+                  method: :delete,
+                  data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                  class: "btn btn--danger" %>
+    </div>
+  </section>
+</main>

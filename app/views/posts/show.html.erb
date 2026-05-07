@@ -1,28 +1,244 @@
-<article class="post-full">
-  <header class="post-full__header">
-    <%= link_to "← Назад", posts_path, class: "back-link" %>
-    <div class="post-full__meta">
-      <span>— <%= @post.author %></span>
-      <span><%= @post.created_at.strftime("%-d %B %Y") %></span>
-      <span><%= @post.reading_time %></span>
-    </div>
-    <h1 class="post-full__title"><%= @post.title %></h1>
-    <div class="post-full__divider">✦</div>
-  </header>
+<style>
+  :root {
+    --page-bg: #f0f2f5;
+    --card-bg: #ffffff;
+    --heading: #111827;
+    --muted: #6b7280;
+    --text: #1f2937;
+    --border: #e8e8e8;
+    --outline: #d1d5db;
+    --accent: #1d9e75;
+    --accent-dark: #147d5d;
+    --danger: #d85a30;
+    --danger-bg: #fff7ed;
+    --shadow: 0 14px 40px rgba(17, 24, 39, 0.08);
+  }
 
-  <div class="post-full__body">
-    <%= simple_format(@post.body) %>
-  </div>
+  body {
+    margin: 0;
+    background: var(--page-bg);
+    color: var(--text);
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
 
-  <footer class="post-full__footer">
-    <div class="post-actions">
-      <%= link_to "Редагувати", edit_post_path(@post), class: "btn btn--primary" %>
-      <%= button_to "Видалити", @post, method: :delete,
-          data: { turbo_confirm: "Видалити цей пост назавжди?" },
-          class: "btn btn--danger" %>
+  .post-page {
+    width: min(880px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 40px 0 56px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 18px;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    color: var(--accent);
+  }
+
+  .post-card {
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--card-bg);
+    box-shadow: var(--shadow);
+  }
+
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    align-items: center;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .post-meta__author {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .post-title {
+    margin: 18px 0 18px;
+    color: var(--heading);
+    font-size: clamp(28px, 5vw, 32px);
+    font-weight: 700;
+    line-height: 1.16;
+  }
+
+  .post-body {
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  .post-body p {
+    margin: 0 0 1rem;
+  }
+
+  .post-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+  }
+
+  .post-detail {
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: #f9fafb;
+  }
+
+  .post-detail__label {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .post-detail__value {
+    color: var(--heading);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .post-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 0 16px;
+    border: 1px solid var(--outline);
+    border-radius: 8px;
+    background: #ffffff;
+    color: var(--heading);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    transition: background 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .btn--primary {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: #ffffff;
+  }
+
+  .btn--primary:hover {
+    border-color: var(--accent-dark);
+    background: var(--accent-dark);
+  }
+
+  .btn--danger {
+    border-color: var(--danger);
+    background: var(--danger-bg);
+    color: var(--danger);
+  }
+
+  .btn--danger:hover {
+    background: #ffedd5;
+  }
+
+  .btn--muted {
+    color: var(--muted);
+  }
+
+  .btn--muted:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  @media (max-width: 640px) {
+    .post-page {
+      width: min(100% - 24px, 880px);
+      padding: 24px 0 40px;
+    }
+
+    .post-details {
+      grid-template-columns: 1fr;
+    }
+
+    .post-actions,
+    .post-actions .btn {
+      width: 100%;
+    }
+  }
+</style>
+
+<main class="post-page">
+  <%= link_to raw("&larr; Back to posts"), posts_path, class: "back-link" %>
+
+  <article class="post-card">
+    <header>
+      <div class="post-meta">
+        <% if @post.author.present? %>
+          <span class="post-meta__author"><%= @post.author %></span>
+        <% end %>
+        <time datetime="<%= @post.created_at.iso8601 %>">
+          <%= @post.created_at.strftime("%B %-d, %Y") %>
+        </time>
+      </div>
+
+      <h1 class="post-title"><%= @post.title %></h1>
+    </header>
+
+    <div class="post-body">
+      <%= simple_format(@post.body) %>
     </div>
-    <% if @post.updated_at != @post.created_at %>
-      <p class="post-full__updated">Оновлено: <%= @post.updated_at.strftime("%-d %b %Y, %H:%M") %></p>
-    <% end %>
-  </footer>
-</article>
+
+    <section class="post-details" aria-label="Post details">
+      <div class="post-detail">
+        <span class="post-detail__label">Author</span>
+        <span class="post-detail__value"><%= @post.author.presence || "Unknown" %></span>
+      </div>
+      <div class="post-detail">
+        <span class="post-detail__label">Reading time</span>
+        <span class="post-detail__value"><%= @post.reading_time %></span>
+      </div>
+      <div class="post-detail">
+        <span class="post-detail__label">Created</span>
+        <span class="post-detail__value"><%= @post.created_at.strftime("%B %-d, %Y at %H:%M") %></span>
+      </div>
+      <div class="post-detail">
+        <span class="post-detail__label">Updated</span>
+        <span class="post-detail__value"><%= @post.updated_at.strftime("%B %-d, %Y at %H:%M") %></span>
+      </div>
+    </section>
+
+    <footer class="post-actions">
+      <%= link_to "Edit", edit_post_path(@post), class: "btn btn--primary" %>
+      <%= link_to "Delete",
+                  post_path(@post),
+                  method: :delete,
+                  data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                  class: "btn btn--danger" %>
+      <%= link_to raw("&larr; Back"), posts_path, class: "btn btn--muted" %>
+    </footer>
+  </article>
+</main>
