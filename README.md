@@ -1,5 +1,4 @@
-
-# ✦ Блог на Ruby on Rails
+# Блог на Ruby on Rails
 
 Простий блог із повним CRUD-функціоналом: створення, перегляд, редагування та видалення постів.
 
@@ -59,7 +58,7 @@ rails server
 
 ## Структура проекту
 
-```
+```text
 blog/
 ├── app/
 │   ├── controllers/
@@ -88,3 +87,37 @@ blog/
 
 ---
 
+## Деплой на GitHub
+
+### Перший раз
+
+```bash
+# Ініціалізувати git репозиторій
+git init
+
+# Додати всі файли
+git add .
+
+# Перший коміт
+git commit -m "Initial commit: Rails blog with CRUD"
+
+# Підключити GitHub репозиторій (замінити YOUR_USERNAME та REPO_NAME)
+git remote add origin https://github.com/YOUR_USERNAME/REPO_NAME.git
+
+# Завантажити на GitHub
+git push -u origin main
+```
+
+### Подальші зміни
+
+```bash
+git add .
+git commit -m "Опис змін"
+git push
+```
+
+---
+
+## Ліцензія
+
+MIT
